@@ -2,4 +2,11 @@
     <string name="app_name">Movie Compose</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_movie_detail">MovieDetailActivity</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="movie_title">Movie Title</string>
+    <string name="movie_sinopsis">Movie Sinopsis</string>
+    <string name="text_question_regist">Belum punya akun ?</string>
+    <string name="daftar">Register</string>
 </resources>

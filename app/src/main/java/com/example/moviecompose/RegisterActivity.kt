@@ -1,5 +1,6 @@
 package com.example.moviecompose
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,7 +13,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
@@ -30,11 +30,21 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
+import com.example.moviecompose.model.UserModel
+import com.example.moviecompose.model.UserPreferences
+import com.example.moviecompose.register.RegisterViewModel
 import com.example.moviecompose.ui.theme.MovieComposeTheme
 
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
 class RegisterActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val registerViewModel = RegisterViewModel(pref = UserPreferences.getInstance(dataStore))
         setContent {
             MovieComposeTheme {
                 // A surface container using the 'background' color from the theme
@@ -42,15 +52,17 @@ class RegisterActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Register()
+                    Register(registerViewModel)
                 }
             }
         }
     }
 }
 
+
+
 @Composable
-fun Register() {
+fun Register(registerViewModel: RegisterViewModel) {
     val context = LocalContext.current
     var username by remember { mutableStateOf(TextFieldValue()) }
     var email by remember { mutableStateOf(TextFieldValue()) }
@@ -162,6 +174,7 @@ fun Register() {
                               passwordError = true
                           }
                           else -> {
+                              registerViewModel.saveUser(UserModel(username.text, email.text, password.text, false))
                               val intent = Intent(context.applicationContext, LoginActivity::class.java)
                               context.startActivity(intent)
                           }
@@ -176,15 +189,8 @@ fun Register() {
                 backgroundColor = MaterialTheme.colors.primary,
             )
         ) {
-            Text("SIGN UP", color = Color.White)
+            Text("Register", color = Color.White)
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    MovieComposeTheme {
-        Register()
-    }
-}
